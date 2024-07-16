@@ -7,6 +7,7 @@ import AboutPage from './Pages/AboutPage'
 import SignInPage from './Pages/SignInPage'
 import SignUpPage from './Pages/SignUpPage'
 import ProfilePage from './Pages/ProfilePage'
+import Header from './Components/Header'
 
 function App() {
 
@@ -15,6 +16,9 @@ function App() {
 
     <>
       <BrowserRouter>
+
+        <Header />
+        
         <Routes>
 
           <Route path="/" element={<HomePage />} />
