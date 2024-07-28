@@ -1,12 +1,13 @@
 const express = require("express")
 
-//const userControllers = require("../controllers/UserControllers");
+const userControllers = require("../controllers/UserController");
 
 
 const router = express.Router();
 
 
-//router.post("/registration", userControllers.Registration);
+router.post("/registration", userControllers.Registration);
+
 
 
 
