@@ -8,15 +8,15 @@ exports.Registration = async (req, res) => {
         const { userName, email, password } = req.body
 
         if (!userName) {
-            return res.send({ errors: "User name is required" })
+            return res.send({ message: "User name is required" })
         }
 
         if (!email) {
-            return res.send({ errors: "Email is required" })
+            return res.send({ message: "Email is required" })
         }
 
         if (!password) {
-            return res.send({ errors: "Password is required" })
+            return res.send({ message: "Password is required" })
         }
 
 
