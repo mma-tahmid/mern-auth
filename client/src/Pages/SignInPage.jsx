@@ -1,11 +1,93 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useState } from 'react';
+import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
 
 const SignInPage = () => {
+
+
+    const navigate = useNavigate()
+
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+
+
+    const [loading, setLoading] = useState(false)
+
+    // form submit function 
+    const handleSubmit = async (event) => {
+
+        event.preventDefault()
+
+        try {
+
+            setLoading(true)
+
+            const response = await axios.post("http://localhost:8000/api/v5/user-auth/login", { email, password })
+
+            if (response.data.success) {
+
+                toast.success(response.data.message, { position: "top-right" })
+
+                // After Submit the form all input field will be empty
+                setEmail("")
+                setPassword("")
+
+                navigate('/')
+            }
+            else {
+                toast.error(response.data.message, { position: "top-right" })  // error of input field validation & existing email & existing user name 
+            }
+
+            setLoading(false)
+
+        }
+
+        catch (error) {
+            //console.log(error)
+            setLoading(false)
+            toast.error("Some thing went Wrong", { position: "top-right" })
+        }
+
+    }
 
     return (
 
         <>
-            <h1> This is Sign In Page </h1>
+
+            <div className='p-3 max-w-lg mx-auto'>
+                {/* input field max width=512px (max-w-lg) */}
+                <h1 className='text-3xl text-center font-semibold my-7 '> Sign In </h1>
+
+                <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
+
+                    <input className='bg-slate-100 p-3 rounded-lg' type="email" placeholder='Enter the  email'
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                    />
+
+                    <input className='bg-slate-100 p-3 rounded-lg' type="password" placeholder='Enter the Password'
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                    />
+
+                    <button disabled={loading} type="submit" className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>
+
+                        {loading ? "Loading..." : "Sign in"} </button>
+
+                </form>
+
+
+                <div className='flex gap-2 mt-5'>
+                    <p> Do not Have an Account? </p>
+                    <Link to='/sign-up'>
+                        <span className='text-blue-500'> Sign up </span>
+                    </Link>
+                </div>
+
+
+            </div>
+
         </>
     );
 };
