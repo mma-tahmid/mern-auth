@@ -96,7 +96,7 @@ exports.Login = async (req, res) => {
         const validUser = await userModels.findOne({ email })
 
         if (!validUser) {
-            return res.status(404).send({
+            return res.status(200).send({
                 success: false,
                 message: "Email is Not Resigtered",
             })

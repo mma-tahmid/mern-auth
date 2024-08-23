@@ -3,16 +3,20 @@ import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { useDispatch, useSelector } from "react-redux"
+import { signInFailure, signInStart, signInSuccess } from '../redux/slice/userSlice';
+
 const SignInPage = () => {
 
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
 
-    const [loading, setLoading] = useState(false)
+    const { loading, error } = useSelector((state) => state.user)
 
     // form submit function 
     const handleSubmit = async (event) => {
@@ -21,12 +25,13 @@ const SignInPage = () => {
 
         try {
 
-            setLoading(true)
+            dispatch(signInStart())
 
             const response = await axios.post("http://localhost:8000/api/v5/user-auth/login", { email, password })
 
             if (response.data.success) {
 
+                dispatch(signInSuccess(response.data.output)) // data loaded in redux dev tool
                 toast.success(response.data.message, { position: "top-right" })
 
                 // After Submit the form all input field will be empty
@@ -36,16 +41,17 @@ const SignInPage = () => {
                 navigate('/')
             }
             else {
+                dispatch(signInFailure(response.data.message));
                 toast.error(response.data.message, { position: "top-right" })  // error of input field validation & existing email & existing user name 
             }
 
-            setLoading(false)
+
 
         }
 
         catch (error) {
             //console.log(error)
-            setLoading(false)
+            dispatch(signInFailure(error.message));
             toast.error("Some thing went Wrong", { position: "top-right" })
         }
 
