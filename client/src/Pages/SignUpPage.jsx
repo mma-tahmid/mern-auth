@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import axios from 'axios'
+import OAuth from '../Components/OAuth';
 
 const SignUpPage = () => {
 
@@ -81,6 +82,8 @@ const SignUpPage = () => {
                     <button disabled={loading} type="submit" className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>
 
                         {loading ? "Loading..." : "Sign up"} </button>
+
+                    <OAuth />
 
                 </form>
 

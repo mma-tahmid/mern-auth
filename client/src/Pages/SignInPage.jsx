@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { useDispatch, useSelector } from "react-redux"
 import { signInFailure, signInStart, signInSuccess } from '../redux/slice/userSlice';
+import OAuth from '../Components/OAuth';
 
 const SignInPage = () => {
 
@@ -80,6 +81,8 @@ const SignInPage = () => {
                     <button disabled={loading} type="submit" className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>
 
                         {loading ? "Loading..." : "Sign in"} </button>
+
+                    <OAuth />
 
                 </form>
 

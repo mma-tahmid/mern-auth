@@ -8,6 +8,7 @@ const router = express.Router();
 
 router.post("/registration", userControllers.Registration);
 router.post("/login", userControllers.Login);
+router.post('/google', userControllers.Google);
 
 
 

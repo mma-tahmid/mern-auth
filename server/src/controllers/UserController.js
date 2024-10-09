@@ -167,3 +167,97 @@ exports.Login = async (req, res) => {
     }
 
 }
+
+
+
+exports.Google = async (req, res) => {
+
+    try {
+
+        // this part use for only new registration
+        //const { email } = req.body
+
+
+        const findexitingUser = await userModels.findOne({ email: req.body.emails })
+
+        if (findexitingUser) {
+            //Create Token
+            // Create token using sign() method
+            const createToken = jwt.sign(
+                { id: findexitingUser._id },
+                process.env.JWT_SECRET_KEY,
+            )
+            // ending of token creation part
+
+            const { password: excludedPassword, ...otherDetails } = findexitingUser.toObject();
+
+            res.cookie(
+                "access_token", // token name 
+                createToken,
+                {
+                    expires: new Date(Date.now() + 3600000), // 1hour
+                    // expires: new Date(Date.now() + 3 * 3600000), // 3 hours
+                    // expires: new Date(Date.now() + 24 * 3600000), // one day
+                    httpOnly: true
+                }
+            ).status(200).send({
+                success: true,
+                message: "Login Successfully",
+                output: otherDetails
+            })
+        }
+
+
+        else {
+            // if user does not exits then create random password
+
+            const generatePasssword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8)
+            // 8 digit password (total 16 digit password 8+8=16) 36 means --> 0 to 9 & a to z 
+
+            // hashing the Password 
+            const salt = bcryptss.genSaltSync(10);
+            const hasheds = bcryptss.hashSync(generatePasssword, salt);
+
+
+            const newUser = await new userModels({
+                userName: req.body.names.split(' ').join('').toLowerCase() + Math.random().toString(36).slice(-8),
+                email: req.body.emails,
+                profilePicture: req.body.photo,
+                password: hasheds
+            }).save()
+
+
+            // Create token using sign() method
+            const createToken = jwt.sign(
+                { id: newUser._id },
+                process.env.JWT_SECRET_KEY,
+            )
+            // ending of token creation part
+
+            const { password: excludedPassword2, ...otherDetails } = newUser.toObject();
+
+            res.cookie(
+                "access_token", // token name 
+                createToken,
+                {
+                    expires: new Date(Date.now() + 3600000), // 1hour
+                    // expires: new Date(Date.now() + 3 * 3600000), // 3 hours
+                    // expires: new Date(Date.now() + 24 * 3600000), // one day
+                    httpOnly: true
+                }
+            ).status(200).send({
+                success: true,
+                message: "Login Successfully",
+                output: otherDetails
+            })
+
+
+        }
+
+    }
+
+
+    catch (error) {
+        console.log(error)
+    }
+}
