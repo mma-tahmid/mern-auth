@@ -24,8 +24,8 @@ const OAuth = () => {
             })
 
             //const data = await response.json();
-            console.log(response)
-            dispatch(signInSuccess(response))
+            console.log(response.data.output)
+            dispatch(signInSuccess(response.data.output))
 
         }
 

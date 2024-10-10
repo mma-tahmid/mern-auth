@@ -174,9 +174,8 @@ exports.Google = async (req, res) => {
 
     try {
 
-        // this part use for only new registration
-        //const { email } = req.body
 
+        //const { email } = req.body // this part use for only new registration
 
         const findexitingUser = await userModels.findOne({ email: req.body.emails })
 
@@ -221,8 +220,8 @@ exports.Google = async (req, res) => {
 
             const newUser = await new userModels({
                 userName: req.body.names.split(' ').join('').toLowerCase() + Math.random().toString(36).slice(-8),
-                email: req.body.emails,
-                profilePicture: req.body.photo,
+                email: req.body.emails, // this emails comes from OAuth.jsx
+                profilePicture: req.body.photo, //this photo comes from OAuth.jsx
                 password: hasheds
             }).save()
 
