@@ -260,3 +260,52 @@ exports.Google = async (req, res) => {
         console.log(error)
     }
 }
+
+
+
+
+exports.UpdateUser = async (req, res) => {
+
+    //req.userInformation.id (this .id is assuming)
+    if (String(req.userInformation.id) !== String(req.params.ids)) {
+        return res.status(401).send({ message: "You can update only your account" })
+    }
+
+    try {
+
+        if (req.body.password) {
+            req.body.password = bcryptss.hashSync(req.body.password, 10)
+        }
+
+
+        //const updateUser = await userModels.findByIdAndUpdate(req.params.ids, { $set: req.body }, { new: true })
+        const updateUser = await userModels.findByIdAndUpdate(req.params.ids, {
+            $set: {
+                userName: req.body.userName,
+                email: req.body.email,
+                password: req.body.password,
+                profilePicture: req.body.profilePicture
+
+            }
+        }, { new: true })
+
+        const { password, ...rest } = updateUser.toObject();
+
+        res.status(200).send({
+            success: true,
+            message: "user updated Successfully",
+            output: rest
+        })
+
+
+    }
+
+
+    catch (error) {
+        res.status(500).send({
+            success: false,
+            message: "Error in Update user",
+            error
+        })
+    }
+}
