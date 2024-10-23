@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from '../firebase/firebaseConfig';
 import axios from 'axios';
-import { updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/slice/userSlice';
+import { DeleteUserFailure, DeleteUserStart, DeleteUserSuccess, updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/slice/userSlice';
 import toast from 'react-hot-toast';
 
 
@@ -112,6 +112,33 @@ const ProfilePage = () => {
     }
 
 
+
+    const handleDeleteAccount = async () => {
+
+        try {
+            dispatch(DeleteUserStart())
+            const response = await axios.delete(`/api/v5/user-auth/delete-user/${currentUser._id}`)
+
+            if (response.data.success) {
+                dispatch(DeleteUserSuccess(response.data.message))
+                toast.success(response.data.message, { position: "top-right" })
+            }
+
+            else {
+                dispatch(DeleteUserFailure(response.data.message));
+                toast.error(response.data.message, { position: "top-right" })
+            }
+        }
+
+        catch (error) {
+            dispatch(DeleteUserFailure(error.message));
+            //toast.error("Some thing went Wrong", { position: "top-right" })
+            toast.error(error.message, { position: "top-right" })
+        }
+    }
+
+
+
     return (
 
 
@@ -164,7 +191,7 @@ const ProfilePage = () => {
             <div className='flex flex-col mt-5'>
                 <div className='self-center w-96'>
                     <div className='flex justify-between  flex-row '>
-                        <span className='text-red-700 cursor-pointer '>
+                        <span onClick={handleDeleteAccount} className='text-red-700 cursor-pointer '>
                             Delete Account
                         </span>
 

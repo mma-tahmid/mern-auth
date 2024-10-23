@@ -312,3 +312,29 @@ exports.UpdateUser = async (req, res) => {
         })
     }
 }
+
+
+exports.DeleteUser = async (req, res) => {
+    // match the id
+    if (req.userInformation.id !== req.params.ids) // id is a random 
+        return res.status(401).send({ message: "You can Delete only your account" })
+
+    try {
+        let deleteUser = await userModels.findByIdAndDelete(req.params.ids)
+
+        res.status(200).send({
+            success: true,
+            message: "user Deleted Successfully",
+        })
+
+    }
+
+    catch (error) {
+        res.status(500).send({
+            success: false,
+            message: "Error in Deleting User",
+            error
+        })
+    }
+
+}
