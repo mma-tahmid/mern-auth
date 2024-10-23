@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux"
 import { signInFailure, signInStart, signInSuccess } from '../redux/slice/userSlice';
 import OAuth from '../Components/OAuth';
+//import { useCookies } from 'react-cookie';
 
 const SignInPage = () => {
 
@@ -20,15 +21,21 @@ const SignInPage = () => {
     const { loading, error } = useSelector((state) => state.user)
 
     // form submit function 
+
+    // const [cookies, setCookie] = useCookies(['access_token']); // Using useCookies to manage cookies
+
     const handleSubmit = async (event) => {
 
         event.preventDefault()
+
 
         try {
 
             dispatch(signInStart())
 
-            const response = await axios.post("http://localhost:8000/api/v5/user-auth/login", { email, password })
+            const response = await axios.post("/api/v5/user-auth/login", { email, password })
+
+
 
             if (response.data.success) {
 

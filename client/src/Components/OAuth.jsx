@@ -4,8 +4,14 @@ import { app } from '../firebase/firebaseConfig';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { signInSuccess } from '../redux/slice/userSlice';
+import { useNavigate } from 'react-router-dom'
+
+
+
 const OAuth = () => {
 
+
+    const navigate = useNavigate()
 
     const dispatch = useDispatch();
 
@@ -17,7 +23,7 @@ const OAuth = () => {
             const auth = getAuth(app);
             const result = await signInWithPopup(auth, provider)
 
-            const response = await axios.post("http://localhost:8000/api/v5/user-auth/google", {
+            const response = await axios.post("/api/v5/user-auth/google", {
                 names: result.user.displayName, // this user comes from google (console)
                 emails: result.user.email,
                 photo: result.user.photoURL
@@ -26,6 +32,7 @@ const OAuth = () => {
             //const data = await response.json();
             console.log(response.data.output)
             dispatch(signInSuccess(response.data.output))
+            navigate('/')
 
         }
 

@@ -24,7 +24,7 @@ const SignUpPage = () => {
 
             setLoading(true)
 
-            const response = await axios.post("http://localhost:8000/api/v5/user-auth/registration", { userName, email, password })
+            const response = await axios.post("/api/v5/user-auth/registration", { userName, email, password })
 
             if (response.data.success) {
 

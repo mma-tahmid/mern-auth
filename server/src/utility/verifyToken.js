@@ -5,7 +5,7 @@ var jwt = require('jsonwebtoken');
 
 exports.VerifyToken = (req, res, next) => {
     const tokenKey = req.cookies.access_token;
-
+    
     // token validation check
     if (!tokenKey) {
         return res.status(401).json({ success: false, message: "You need to login" }); // if token is not set in cookies

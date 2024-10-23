@@ -143,12 +143,15 @@ exports.Login = async (req, res) => {
                 expires: new Date(Date.now() + 3600000), // 1hour
                 // expires: new Date(Date.now() + 3 * 3600000), // 3 hours
                 // expires: new Date(Date.now() + 24 * 3600000), // one day
-                httpOnly: true
+                httpOnly: true,
+
             }
         ).status(200).send({
             success: true,
             message: "Login Successfully",
-            output: otherDetails
+            output: otherDetails,
+            token: createToken
+
         })
 
 
@@ -267,7 +270,8 @@ exports.Google = async (req, res) => {
 exports.UpdateUser = async (req, res) => {
 
     //req.userInformation.id (this .id is assuming)
-    if (String(req.userInformation.id) !== String(req.params.ids)) {
+    // if (String(req.userInformation.id) !== String(req.params.ids)) {
+    if (req.userInformation.id !== req.params.ids) {
         return res.status(401).send({ message: "You can update only your account" })
     }
 
@@ -285,7 +289,6 @@ exports.UpdateUser = async (req, res) => {
                 email: req.body.email,
                 password: req.body.password,
                 profilePicture: req.body.profilePicture
-
             }
         }, { new: true })
 

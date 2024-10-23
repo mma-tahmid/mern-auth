@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from '../firebase/firebaseConfig';
+import axios from 'axios';
+import { updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/slice/userSlice';
+import toast from 'react-hot-toast';
 
 
 const ProfilePage = () => {
 
-    const { currentUser } = useSelector((state) => state.user)
+    const { currentUser, loading } = useSelector((state) => state.user)
 
     const fileRef = useRef(null)
     const [image, setImage] = useState(undefined)
@@ -55,8 +58,59 @@ const ProfilePage = () => {
                 })
             }
         )
+    }
+
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.id]: e.target.value }) // this id comes from input field id
+    }
+
+    //console.log(formData)
+
+    const dispatch = useDispatch();
+
+
+
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        //const token = useCookies.get('access_token');
+
+
+        try {
+
+            dispatch(updateUserStart())
+
+            //const token = cookies.access_token;
+
+            const response = await axios.post(`/api/v5/user-auth/update-user/${currentUser._id}`, formData)
+
+
+            if (response.data.success) {
+
+                //dispatch(updateUserSuccess(response.data.output)) // data loaded in redux dev tool
+                dispatch(updateUserSuccess(response.data.output)) // data loaded in redux dev tool
+                toast.success(response.data.message, { position: "top-right" })
+            }
+
+            else {
+                dispatch(updateUserFailure(response.data.message));
+                toast.error(response.data.message, { position: "top-right" })  // error of input field validation & existing email & existing user name 
+            }
+
+        }
+
+        catch (error) {
+            //console.log(error)
+            dispatch(updateUserFailure(error.message));
+            //toast.error("Some thing went Wrong", { position: "top-right" })
+            toast.error(error.message, { position: "top-right" })
+        }
 
     }
+
 
     return (
 
@@ -70,7 +124,7 @@ const ProfilePage = () => {
         <>
             <h1 className='text-3xl font-semibold text-center my-7 '> profile </h1>
 
-            <form className='flex flex-col gap-4'>
+            <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
 
                 <input type="file" ref={fileRef} hidden accept='image/*'
 
@@ -88,13 +142,23 @@ const ProfilePage = () => {
                     }
                 </p>
 
-                <input defaultValue={currentUser.userName} className='bg-slate-100 rounded-lg p-3 self-center w-96' type="text" placeholder='Username' />
+                <input id='userName' defaultValue={currentUser.userName} className='bg-slate-100 rounded-lg p-3 self-center w-96' type="text" placeholder='Username'
+                    onChange={handleChange}
+                />
 
-                <input defaultValue={currentUser.email} className='bg-slate-100 rounded-lg p-3 self-center w-96' type="email" placeholder='Email' />
+                <input id='email' defaultValue={currentUser.email} className='bg-slate-100 rounded-lg p-3 self-center w-96' type="email" placeholder='Email'
+                    onChange={handleChange}
+                />
 
-                <input className='bg-slate-100 rounded-lg p-3 self-center w-96' type="password" placeholder='Password' />
+                <input id='password' className='bg-slate-100 rounded-lg p-3 self-center w-96' type="password" placeholder='Password'
 
-                <button className='self-center w-96  bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-85 '>Update</button>
+                    onChange={handleChange} />
+
+                <button className='self-center w-96  bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-85 '>
+                    {
+                        loading ? "Loading...." : "Update"
+                    }
+                </button>
             </form>
 
             <div className='flex flex-col mt-5'>
