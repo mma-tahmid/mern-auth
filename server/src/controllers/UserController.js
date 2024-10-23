@@ -338,3 +338,13 @@ exports.DeleteUser = async (req, res) => {
     }
 
 }
+
+
+exports.SignOut = async (req, res) => {
+
+    res.clearCookie('access_token').status(200).send({
+        message: "SignOut Success!"
+    })
+
+
+}

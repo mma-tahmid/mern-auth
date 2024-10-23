@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from '../firebase/firebaseConfig';
 import axios from 'axios';
-import { DeleteUserFailure, DeleteUserStart, DeleteUserSuccess, updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/slice/userSlice';
+import { DeleteUserFailure, DeleteUserStart, DeleteUserSuccess, SignOut, updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/slice/userSlice';
 import toast from 'react-hot-toast';
 
 
@@ -139,6 +139,20 @@ const ProfilePage = () => {
 
 
 
+    const handleSignOut = async () => {
+
+        try {
+
+            const response = await axios.get("/api/v5/user-auth/signout")
+            dispatch(SignOut())
+            toast.success(response.data.message, { position: "top-right" })
+        }
+        catch (error) {
+            console.log(error)
+        }
+
+    }
+
     return (
 
 
@@ -195,7 +209,7 @@ const ProfilePage = () => {
                             Delete Account
                         </span>
 
-                        <span className='text-red-700 cursor-pointer '>
+                        <span onClick={handleSignOut} className='text-red-700 cursor-pointer '>
                             sign out
                         </span>
                     </div>

@@ -12,6 +12,7 @@ router.post("/login", userControllers.Login);
 router.post('/google', userControllers.Google);
 router.post('/update-user/:ids', VerifyToken, userControllers.UpdateUser);
 router.delete('/delete-user/:ids', VerifyToken, userControllers.DeleteUser);
+router.get("/signout", userControllers.SignOut);
 
 
 
