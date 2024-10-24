@@ -30,7 +30,7 @@ const OAuth = () => {
             })
 
             //const data = await response.json();
-            console.log(response.data.output)
+            // console.log(response.data.output)
             dispatch(signInSuccess(response.data.output))
             navigate('/')
 
