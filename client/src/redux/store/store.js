@@ -9,7 +9,7 @@ import storage from "redux-persist/lib/storage";
 
 
 const rootReducer = combineReducers({
-    user: userReducer //// user comes from name (userSlice.js)
+    user: userReducer // user comes from name (userSlice.js)
 })
 
 const persistConfig = {

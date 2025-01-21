@@ -37,7 +37,8 @@ const OAuth = () => {
         }
 
         catch (error) {
-            console.log("could not login with google", error)
+            //console.log("could not login with google", error)
+            console.log("could not login with google")
 
         }
     }

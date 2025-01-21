@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import axios from 'axios'
 import OAuth from '../Components/OAuth';
+import { useDispatch } from 'react-redux';
 
 const SignUpPage = () => {
 

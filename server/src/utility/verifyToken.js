@@ -17,7 +17,7 @@ exports.VerifyToken = (req, res, next) => {
         if (err) {
             return res.status(401).json({ success: false, message: "Token is not Valid" }); // if token is wrong
         }
-        req.userInformation = information;
+        req.userInformation = information; 
         next();
     });
 };
